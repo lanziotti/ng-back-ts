@@ -36,10 +36,15 @@ class UserController {
             return res.status(201).json(registeredUser[0]);
 
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ mensagem: "Erro interno do servidor." });
         }
     }
 }
 
-export { UserController };
+class BalanceUserController {
+    async read(req: Request, res: Response) {
+        console.log("BalanceUser")
+    }
+}
+
+export { UserController, BalanceUserController};
