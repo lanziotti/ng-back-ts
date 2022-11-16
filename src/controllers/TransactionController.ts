@@ -5,6 +5,10 @@ type UserId = {
     id: number
 }
 
+type AccountId = {
+    accountid: number
+}
+
 class TransactionController {
     async create(req: Request, res: Response) {
         const { id } = req.user as UserId;
@@ -58,4 +62,30 @@ class TransactionController {
     }
 }
 
-export { TransactionController }
+class ExtractController {
+    async read(req: Request, res: Response) {
+        const { accountid } = req.user as AccountId;
+
+        try {
+            const userExists = await connection('users').where({ accountid }).first();
+
+            if (!userExists) {
+                return res.status(400).json({ mensagem: "Esse usuário não existe no banco de dados do sistema." });
+            }
+
+            const transactionsDebitedUser = await connection('transactions').where({debitedaccountid: accountid});
+            
+            const transactionsCreditedUser = await connection('transactions').where({creditedaccountid: accountid});
+            
+            const extractUser = [...transactionsDebitedUser, ...transactionsCreditedUser];
+
+            return res.status(200).json(extractUser);
+            
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ mensagem: "Erro interno do servidor." });
+        }
+    }
+}
+
+export { TransactionController, ExtractController }

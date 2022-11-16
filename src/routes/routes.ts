@@ -4,7 +4,7 @@ import { BalanceUserController, UserController } from '../controllers/UserContro
 import { schemaValidation } from '../middlewares/schemaValidator';
 import { userSchema } from '../validations/UserSchema';
 import { authenticationFilter } from '../middlewares/authentication';
-import { TransactionController } from '../controllers/TransactionController';
+import { ExtractController, TransactionController } from '../controllers/TransactionController';
 
 const routes = Router();
 
@@ -12,6 +12,7 @@ const userController = new UserController();
 const loginController = new LoginController();
 const balanceUserController = new BalanceUserController();
 const transactionController = new TransactionController();
+const extractController = new ExtractController();
 
 routes.post('/user', schemaValidation(userSchema), userController.create);
 routes.post('/login', loginController.create);
@@ -20,5 +21,6 @@ routes.use(authenticationFilter);
 
 routes.get('/user/balance', balanceUserController.read);
 routes.post('/transfer', transactionController.create);
+routes.get('/user/extract', extractController.read);
 
 export default routes;
