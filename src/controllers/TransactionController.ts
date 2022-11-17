@@ -101,11 +101,11 @@ class TransactionFilterController {
             }
 
             if (Number(debitedAccountNumber) !== userExists.accountid && debitedAccountNumber !== undefined) {
-                return res.status(401).json({mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO."});
+                return res.status(401).json({ mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO." });
             }
 
             if (Number(creditedAccountNumber) !== userExists.accountid && creditedAccountNumber !== undefined) {
-                return res.status(401).json({mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO."});
+                return res.status(401).json({ mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO." });
             }
 
             let filteredTransactions = [];
@@ -121,11 +121,11 @@ class TransactionFilterController {
             }
 
             if (date) {
-                const dateDebitedTransactionsUser = await connection('transactions').where({debitedaccountid: userExists.accountid, createdat: date });
-                
+                const dateDebitedTransactionsUser = await connection('transactions').where({ debitedaccountid: userExists.accountid, createdat: date });
+
                 filteredTransactions.push(...dateDebitedTransactionsUser);
 
-                const dateCreditedTransactionsUser = await connection('transactions').where({creditedaccountid: userExists.accountid, createdat: date });
+                const dateCreditedTransactionsUser = await connection('transactions').where({ creditedaccountid: userExists.accountid, createdat: date });
 
                 filteredTransactions.push(...dateCreditedTransactionsUser);
             }
@@ -133,7 +133,6 @@ class TransactionFilterController {
             return res.status(200).json(filteredTransactions);
 
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ mensagem: "Erro interno do servidor." });
         }
     }
