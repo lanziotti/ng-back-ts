@@ -1,9 +1,14 @@
 import knex from "knex";
 
+const port = process.env.DB_PORT as number | undefined
+
 const connection = knex({
     client: 'pg',
     connection: {
-        uri: process.env.DB_URI   
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_DATABASE
     }
 });
 
