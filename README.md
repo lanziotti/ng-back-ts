@@ -30,6 +30,11 @@ Projeto feito para aplicação no processo seletivo para uma vaga de Desenvolved
 ## Como rodar o projeto
 Abra o vsCode ou o editor de código de sua preferência na pasta desejada. Em seguida, abra o terminal. Com ele aberto, faça o clone do projeto do repostório (link está no final dessa documentação) na sua máquina. Após isso, caminhe para a pasta `ng-back-ts` e, no terminal, execute o comando `npm i`. Com isso feito, aparecerá uma pasta de nome `node_modules` no projeto. Logo em seguida, crie um arquivo na raíz do projeto com o nome `.env`. Copie o conteúdo do arquivo `.env.example` (que já está contido no projeto) e cole dentro desse arquivo `.env` criado anteriormente. Em seguida, adiocione para `PORT=` o número 3000 (PORT=3000). Para a variável `HASH_JWT=` coloque qualquer conjunto de caracteres que preferir. A variável `DB_DATABASE` deverá ser preenchida com o nome que você deu para o seu banco de dados. Já para as demais variáveis que começam com `DB`, terá de ser inserido valores de acordo com os dados do seu banco de dados PostgreSQL. A imagem abaixo auxilia na adição dos respectivos valores: 
 
+![Logo do projeto](https://github.com/lanziotti/ng-back-ts/blob/master/imageBeekeeper.png)
+
+Após ter atribuido todos esses valores para suas respectivas variáveis e de ter criado o seu banco de dados, crie as tabelas exatamente como estão contidas no arquivo `dump.sql` do projeto, para isso você pode usar o Beekeeper Studio ou até mesmo qualquer outro de sua preferência.
+Feito tudo isso, abra novamente o terminal e execute o comando `npm run dev`. Após isso, finalmente, pode-se testar a funcionalidade dos endpoints conforme explicado logo abaixo.
+
 ## Endpoints
 #### `POST` `/user`
 Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
