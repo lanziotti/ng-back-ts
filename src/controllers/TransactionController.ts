@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import connection from '../database/connection';
+import format from 'date-fns/format';
 
 type UserId = {
     id: number
@@ -43,7 +44,7 @@ class TransactionController {
                 debitedaccountid: homeUser.accountid,
                 creditedaccountid: targetUser.accountid,
                 valuetransaction: Number(valueTransaction),
-                createdat: new Date()
+                createdat: format(new Date(), "yyyy-MM-dd")
             }).returning('*');
 
             await connection('accounts').where({ id: homeUser.accountid }).update({
@@ -73,14 +74,64 @@ class ExtractController {
                 return res.status(400).json({ mensagem: "Esse usuário não existe no banco de dados do sistema." });
             }
 
-            const transactionsDebitedUser = await connection('transactions').where({debitedaccountid: accountid});
-            
-            const transactionsCreditedUser = await connection('transactions').where({creditedaccountid: accountid});
-            
+            const transactionsDebitedUser = await connection('transactions').where({ debitedaccountid: accountid });
+
+            const transactionsCreditedUser = await connection('transactions').where({ creditedaccountid: accountid });
+
             const extractUser = [...transactionsDebitedUser, ...transactionsCreditedUser];
 
             return res.status(200).json(extractUser);
-            
+
+        } catch (error) {
+            return res.status(500).json({ mensagem: "Erro interno do servidor." });
+        }
+    }
+}
+
+class TransactionFilterController {
+    async read(req: Request, res: Response) {
+        const { accountid } = req.user as AccountId;
+        const { date, debitedAccountNumber, creditedAccountNumber } = req.query;
+
+        try {
+            const userExists = await connection('users').where({ accountid }).first();
+
+            if (!userExists) {
+                return res.status(400).json({ mensagem: "Esse usuário não existe no banco de dados do sistema." });
+            }
+
+            if (Number(debitedAccountNumber) !== userExists.accountid && debitedAccountNumber !== undefined) {
+                return res.status(401).json({mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO."});
+            }
+
+            if (Number(creditedAccountNumber) !== userExists.accountid && creditedAccountNumber !== undefined) {
+                return res.status(401).json({mensagem: "O número da sua conta bancária está INCORRETO. Por favor insira o número CORRETO."});
+            }
+
+            let filteredTransactions = [];
+
+            if (debitedAccountNumber && Number(debitedAccountNumber) === userExists.accountid) {
+                const debitedTransactionsUser = await connection('transactions').where({ debitedaccountid: debitedAccountNumber });
+                filteredTransactions.push(...debitedTransactionsUser);
+            }
+
+            if (creditedAccountNumber && Number(creditedAccountNumber) === userExists.accountid) {
+                const creditedTransactionsUser = await connection('transactions').where({ creditedaccountid: creditedAccountNumber });
+                filteredTransactions.push(...creditedTransactionsUser);
+            }
+
+            if (date) {
+                const dateDebitedTransactionsUser = await connection('transactions').where({debitedaccountid: userExists.accountid, createdat: date });
+                
+                filteredTransactions.push(...dateDebitedTransactionsUser);
+
+                const dateCreditedTransactionsUser = await connection('transactions').where({creditedaccountid: userExists.accountid, createdat: date });
+
+                filteredTransactions.push(...dateCreditedTransactionsUser);
+            }
+
+            return res.status(200).json(filteredTransactions);
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({ mensagem: "Erro interno do servidor." });
@@ -88,4 +139,4 @@ class ExtractController {
     }
 }
 
-export { TransactionController, ExtractController }
+export { TransactionController, ExtractController, TransactionFilterController }
