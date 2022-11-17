@@ -27,6 +27,9 @@ Projeto feito para aplicação no processo seletivo para uma vaga de Desenvolved
 - Consulta do Extrato do Usuário Logado
 - Filtragem das Transações do Usuário Logado
 
+## Como rodar o projeto
+Abra o vsCode ou o editor de código de sua preferência na pasta desejada. Em seguida, abra o terminal. Com ele aberto, faça o clone do projeto do repostório (link está no final dessa documentação) na sua máquina. Após isso, caminhe para a pasta `ng-back-ts` e, no terminal, execute o comando `npm i`. Com isso feito, aparecerá uma pasta de nome `node_modules` no projeto. Logo em seguida, crie um arquivo na raíz do projeto com o nome `.env`. Copie o conteúdo do arquivo `.env.example` (que já está contido no projeto) e cole dentro desse arquivo `.env` criado anteriormente. Em seguida, adiocione para `PORT=` o número 3000 (PORT=3000). Para a variável `HASH_JWT=` coloque qualquer conjunto de caracteres que preferir. A variável `DB_DATABASE` deverá ser preenchida com o nome que você deu para o seu banco de dados. Já para as demais variáveis que começam com `DB`, terá de ser inserido valores de acordo com os dados do seu banco de dados PostgreSQL. A imagem abaixo auxilia na adição dos respectivos valores: 
+
 ## Endpoints
 #### `POST` `/user`
 Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
