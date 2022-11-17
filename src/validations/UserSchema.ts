@@ -11,4 +11,6 @@ export const userSchema = z.object({
         invalid_type_error: "SENHA Inválida."
     })
         .min(8, "A SENHA precisa ter, no mínimo, 8 caracteres.")
+        .regex(/^(?=.*?[A-Z]).*$/, "A SENHA precisa ter pelo menos uma LETRA MAIÚSCULA.")
+        .regex(/^(?=.*?[0-9]).*$/, "A SENHA precisa ter pelo menos um NÚMERO.")
 });
